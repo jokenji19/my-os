@@ -1,0 +1,22 @@
+# Build directory
+build/
+
+# ISO images
+*.iso
+
+# Object files
+*.o
+*.obj
+
+# Executable files
+*.bin
+*.elf
+
+# Backup files
+*~
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
