@@ -1,6 +1,4 @@
-
 # My OS: A Vision for the Future of Mobile Computing
-
 
 ---
 
@@ -26,21 +24,13 @@ Questo è più di un semplice progetto tecnico; è un esperimento per creare un 
 
 ---
 
-
 ##  The Vision in (English)
-
 
 ### What Is This?
 
-
-
 **My OS** is the beginning of a journey to create a brand-new mobile operating system, built from the ground up. The goal is not to replicate what already exists, but to reimagine the interaction between user and device by placing an artificial intelligence at the core of the experience.
 
-
-
 ### What Will It Become?
-
-
 
 This project aims to evolve into an **open-source kernel and operating system for smartphones**, driven by a radically different philosophy:
 
@@ -56,23 +46,15 @@ This is more than just a technical project; it's an experiment in creating a dev
 
 ---
 
-
 ## 🛠️ Comandi / Commands
 
-
 ### Italiano
-
-
 
 -   **`make`**: Compila il kernel e crea l'immagine ISO bootabile (`build/my-os.iso`).
 -   **`make run`**: Esegue l'ISO in QEMU, compilando se necessario.
 -   **`make clean`**: Rimuove la directory `build/`.
 
-
-
 ### English
-
-
 
 -   **`make`**: Compiles the kernel and creates the bootable ISO image (`build/my-os.iso`).
 -   **`make run`**: Runs the ISO in QEMU, building first if needed.
