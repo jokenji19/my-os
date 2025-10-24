@@ -1,22 +1,5 @@
-# Build directory
-build/
+# Ignore the build folder
+/build/
 
-# ISO images
-*.iso
-
-# Object files
+# Ignore compiled object files
 *.o
-*.obj
-
-# Executable files
-*.bin
-*.elf
-
-# Backup files
-*~
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-Thumbs.db
