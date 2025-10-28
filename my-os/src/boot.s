@@ -28,6 +28,35 @@ start:
     hlt
 .size start, . - start
 
+# Interrupt Service Routines (ISRs)
+.global isr0
+.type isr0, @function
+isr0:
+    pushal
+    call isr0_handler
+    popal
+    iret
+.size isr0, . - isr0
+
+.global isr1
+.type isr1, @function
+isr1:
+    pushal
+    call isr1_handler
+    popal
+    iret
+.size isr1, . - isr1
+
+# Timer interrupt (IRQ 0 -> interrupt 32)
+.global isr32
+.type isr32, @function
+isr32:
+    pushal
+    call timer_handler
+    popal
+    iret
+.size isr32, . - isr32
+
 # I'm defining the BSS section for my stack.
 .section .bss
 .align 16

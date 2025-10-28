@@ -10,13 +10,18 @@ GRUB_MKRESCUE = $(CROSS_PREFIX)grub-mkrescue
 
 # These are the flags I'll use for the compiler and linker.
 ASMFLAGS = 
-GCCFLAGS = -ffreestanding -O2 -Wall -Wextra
+GCCFLAGS = -ffreestanding -O2 -Wall -Wextra -I src
 LDFLAGS = -T src/linker.ld
 
 # I'm defining the output and intermediate files here.
 BOOT_OBJ = build/boot.o
 KERNEL_OBJ = build/kernel.o
-OBJS = $(BOOT_OBJ) $(KERNEL_OBJ)
+IDT_OBJ = build/idt.o
+GDT_OBJ = build/gdt.o
+PIC_OBJ = build/pic.o
+TIMER_OBJ = build/timer.o
+SCHEDULER_OBJ = build/scheduler.o
+OBJS = $(BOOT_OBJ) $(KERNEL_OBJ) $(IDT_OBJ) $(GDT_OBJ) $(PIC_OBJ) $(TIMER_OBJ) $(SCHEDULER_OBJ)
 KERNEL_BIN = build/kernel.bin
 ISO_DIR = build/isodir
 ISO_FILE = build/my-os.iso
@@ -53,5 +58,30 @@ $(BOOT_OBJ): src/boot.s
 
 # And here I compile my C kernel file.
 $(KERNEL_OBJ): src/kernel.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the IDT file.
+$(IDT_OBJ): src/idt.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the GDT file.
+$(GDT_OBJ): src/gdt.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the PIC file.
+$(PIC_OBJ): src/pic.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the TIMER file.
+$(TIMER_OBJ): src/timer.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the SCHEDULER file.
+$(SCHEDULER_OBJ): src/scheduler.c
 	mkdir -p build
 	$(GCC) $(GCCFLAGS) -c $< -o $@
