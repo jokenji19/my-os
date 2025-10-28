@@ -22,7 +22,8 @@ PIC_OBJ = build/pic.o
 TIMER_OBJ = build/timer.o
 SCHEDULER_OBJ = build/scheduler.o
 MEMORY_OBJ = build/memory.o
-OBJS = $(BOOT_OBJ) $(KERNEL_OBJ) $(IDT_OBJ) $(GDT_OBJ) $(PIC_OBJ) $(TIMER_OBJ) $(SCHEDULER_OBJ) $(MEMORY_OBJ)
+FRAMEBUFFER_OBJ = build/framebuffer.o
+OBJS = $(BOOT_OBJ) $(KERNEL_OBJ) $(IDT_OBJ) $(GDT_OBJ) $(PIC_OBJ) $(TIMER_OBJ) $(SCHEDULER_OBJ) $(MEMORY_OBJ) $(FRAMEBUFFER_OBJ)
 KERNEL_BIN = build/kernel.bin
 ISO_DIR = build/isodir
 ISO_FILE = build/my-os.iso
@@ -89,5 +90,10 @@ $(SCHEDULER_OBJ): src/scheduler.c
 
 # Compile the MEMORY file.
 $(MEMORY_OBJ): src/memory.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the FRAMEBUFFER file.
+$(FRAMEBUFFER_OBJ): src/framebuffer.c
 	mkdir -p build
 	$(GCC) $(GCCFLAGS) -c $< -o $@

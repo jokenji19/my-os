@@ -10,6 +10,7 @@
 #include "timer.h"
 #include "scheduler.h"
 #include "memory.h"
+#include "framebuffer.h"
 
 /* ISR handler prototypes */
 void isr0_handler();
@@ -200,6 +201,14 @@ void kernel_main(void) {
 
     /* Initialize memory manager */
     init_memory_manager();
+
+    /* Initialize framebuffer for graphics */
+    init_framebuffer();
+
+    /* Show framebuffer capabilities demo */
+    fb_demo();
+
+    vga_print("GUI preliminare pronta - In attesa di driver hardware!", 0, 30, VGA_COLOR_GREEN);
 
     /*
      * Main kernel loop - system is now running with interrupts
