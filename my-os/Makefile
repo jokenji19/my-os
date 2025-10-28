@@ -19,6 +19,7 @@ KERNEL_OBJ = build/kernel.o
 KERNEL_MINIMAL_OBJ = build/kernel_minimal.o
 IDT_OBJ = build/idt.o
 GDT_OBJ = build/gdt.o
+FAT32_OBJ = build/fat32.o
 KERNEL_BIN = build/kernel.bin
 KERNEL_MINIMAL_BIN = build/kernel_minimal.bin
 ISO_DIR = build/isodir
