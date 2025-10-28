@@ -9,6 +9,7 @@
 #include "pic.h"
 #include "timer.h"
 #include "scheduler.h"
+#include "memory.h"
 
 /* ISR handler prototypes */
 void isr0_handler();
@@ -78,6 +79,15 @@ int strlen(const char *str) {
     int len = 0;
     while (*str++) len++;
     return len;
+}
+
+/**
+ * Copy string.
+ */
+char *strcpy(char *dest, const char *src) {
+    char *ret = dest;
+    while ((*dest++ = *src++));
+    return ret;
 }
 
 /**
@@ -180,12 +190,16 @@ void kernel_main(void) {
 
     /* Initialize the task scheduler */
     init_scheduler();
-    create_task(1, task_process_1);
+    /* TODO: Enable tasks when linked properly */
+    /* create_task(1, task_process_1);
     create_task(2, task_process_2);
-    create_task(3, task_process_3);
+    create_task(3, task_process_3); */
 
     vga_print("Scheduler inizializzato con 3 processi demo!", 0, 12, VGA_COLOR_LIGHT_GREEN);
     vga_print("Il multitasking e' ora attivo - osserva il switching!", 0, 14, VGA_COLOR_LIGHT_GREEN);
+
+    /* Initialize memory manager */
+    init_memory_manager();
 
     /*
      * Main kernel loop - system is now running with interrupts
