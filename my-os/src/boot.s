@@ -61,5 +61,5 @@ isr32:
 .section .bss
 .align 16
 stack_bottom:
-.skip 16384 # I'm allocating 16 KiB for the stack.
+.skip 65536 # I'm allocating 64 KiB for the stack.
 stack_top:

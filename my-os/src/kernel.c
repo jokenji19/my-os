@@ -11,10 +11,18 @@
 #include "scheduler.h"
 #include "memory.h"
 #include "framebuffer.h"
+#include "sensors.h"
+#include "menu.h"
+#include "ai_runtime.h"
 
 /* ISR handler prototypes */
 void isr0_handler();
 void isr1_handler();
+
+/* Menu callback prototypes */
+extern void callback_insert_ai();
+extern void callback_info();
+extern void callback_exit();
 
 /* VGA text mode constants */
 #define VGA_ADDRESS 0xB8000
@@ -202,17 +210,36 @@ void kernel_main(void) {
     /* Initialize memory manager */
     init_memory_manager();
 
+    /* Initialize sensor framework for AI */
+    init_sensor_framework();
+
     /* Initialize framebuffer for graphics */
     init_framebuffer();
 
     /* Show framebuffer capabilities demo */
     fb_demo();
 
-    vga_print("GUI preliminare pronta - In attesa di driver hardware!", 0, 30, VGA_COLOR_GREEN);
+    /* Initialize and show main menu */
+    init_menu_system();
+    menu_t *main_menu = create_menu("My OS - Sistema AI-centrico", 0, 0);
+
+    if (main_menu) {
+        add_menu_item(main_menu, MENU_ITEM_BUTTON, "Inserisci file IA", 0, 0, 0, 0, VGA_COLOR_WHITE, VGA_COLOR_CYAN, callback_insert_ai);
+        add_menu_item(main_menu, MENU_ITEM_BUTTON, "Informazioni sistema", 0, 1, 0, 0, VGA_COLOR_WHITE, VGA_COLOR_CYAN, callback_info);
+        add_menu_item(main_menu, MENU_ITEM_BUTTON, "Esci", 0, 2, 0, 0, VGA_COLOR_WHITE, VGA_COLOR_RED, callback_exit);
+
+        render_menu(main_menu);
+
+        vga_print("Usa le funzioni simulate per navigare (non implementato input per ora)", 0, 31, VGA_COLOR_YELLOW);
+        vga_print("Sistema pronto per AI - carica un modello per cominciare!", 0, 32, VGA_COLOR_LIGHT_GREEN);
+    }
 
     /*
      * Main kernel loop - system is now running with interrupts
-     * TODO: Add AI reasoning, process scheduling, device management
+     * The timer will eventually trigger a safe shutdown after the demo
      */
-    while (1) { }
+    while (1) {
+        /* Main system loop - AI can perform periodic tasks here */
+        /* For demo, we rely on timer interrupts to drive activity */
+    }
 }

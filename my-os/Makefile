@@ -23,7 +23,10 @@ TIMER_OBJ = build/timer.o
 SCHEDULER_OBJ = build/scheduler.o
 MEMORY_OBJ = build/memory.o
 FRAMEBUFFER_OBJ = build/framebuffer.o
-OBJS = $(BOOT_OBJ) $(KERNEL_OBJ) $(IDT_OBJ) $(GDT_OBJ) $(PIC_OBJ) $(TIMER_OBJ) $(SCHEDULER_OBJ) $(MEMORY_OBJ) $(FRAMEBUFFER_OBJ)
+SENSORS_OBJ = build/sensors.o
+MENU_OBJ = build/menu.o
+AI_RUNTIME_OBJ = build/ai_runtime.o
+OBJS = $(BOOT_OBJ) $(KERNEL_OBJ) $(IDT_OBJ) $(GDT_OBJ) $(PIC_OBJ) $(TIMER_OBJ) $(SCHEDULER_OBJ) $(MEMORY_OBJ) $(FRAMEBUFFER_OBJ) $(SENSORS_OBJ) $(MENU_OBJ) $(AI_RUNTIME_OBJ)
 KERNEL_BIN = build/kernel.bin
 ISO_DIR = build/isodir
 ISO_FILE = build/my-os.iso
@@ -95,5 +98,20 @@ $(MEMORY_OBJ): src/memory.c
 
 # Compile the FRAMEBUFFER file.
 $(FRAMEBUFFER_OBJ): src/framebuffer.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the SENSORS file.
+$(SENSORS_OBJ): src/sensors.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the MENU file.
+$(MENU_OBJ): src/menu.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Compile the AI RUNTIME file.
+$(AI_RUNTIME_OBJ): src/ai_runtime.c
 	mkdir -p build
 	$(GCC) $(GCCFLAGS) -c $< -o $@
