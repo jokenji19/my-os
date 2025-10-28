@@ -14,6 +14,10 @@
 #define AI_FORMAT_ONNX       1
 #define AI_FORMAT_TFLITE     2
 #define AI_FORMAT_CUSTOM     3
+#define AI_FORMAT_COREML     4
+#define AI_FORMAT_TENSORRT   5
+#define AI_FORMAT_SAFETENSORS 6
+#define AI_FORMAT_GGUF       7
 
 /* Maximum supported model parameters */
 #define MAX_MODEL_LAYERS     16

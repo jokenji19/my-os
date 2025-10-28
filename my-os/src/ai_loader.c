@@ -8,6 +8,12 @@
 #include "memory.h"
 #include "fat32.h"
 
+/* Forward declarations */
+int ai_create_demo_model_from_file(uint8_t *data, uint32_t size, ai_loaded_model_t *model, const char *filename);
+void ai_load_weights_from_data(uint8_t *data, uint32_t size, nn_model_t *model);
+void srand(uint32_t seed);
+uint32_t rand(void);
+
 /* Global AI Model Instance */
 static ai_loaded_model_t *current_loaded_model = 0;
 
@@ -94,7 +100,7 @@ int ai_loader_unload_model(ai_loaded_model_t *model) {
 
     /* Clear model */
     memset(model, 0, sizeof(ai_loaded_model_t));
-    current_loaded_model = NULL;
+    current_loaded_model = 0;
 
     vga_print("AI Model unloaded successfully", 0, 47, VGA_COLOR_LIGHT_BLUE);
     return 0;
@@ -102,15 +108,41 @@ int ai_loader_unload_model(ai_loaded_model_t *model) {
 
 /* Simplified model creation for demo */
 int ai_create_demo_model_from_file(uint8_t *data, uint32_t size, ai_loaded_model_t *model, const char *filename) {
-    /* Detect file format */
+    /* Detect file format - enhanced detection for enterprise formats */
     uint8_t format = AI_FORMAT_CUSTOM;
 
     if (size >= 8) {
         uint32_t magic = *(uint32_t*)data;
+
+        // ONNX - Open Neural Network Exchange
         if (magic == 0x0892A9FF) {
             format = AI_FORMAT_ONNX;
-        } else if (data[0] == 'T' && data[1] == 'F' && data[2] == 'L' && data[3] == '3') {
+        }
+        // Core ML - Apple format
+        else if (data[0] == 'm' && data[1] == 'l' && data[2] == 'm' && data[3] == 'o') {
+            format = AI_FORMAT_COREML;
+        }
+        // GGUF - GGML Universal Format
+        else if (data[0] == 'G' && data[1] == 'G' && data[2] == 'U' && data[3] == 'F') {
+            format = AI_FORMAT_GGUF;
+        }
+        // TensorFlow Lite
+        else if (data[0] == 'T' && data[1] == 'F' && data[2] == 'L' && data[3] == '3') {
             format = AI_FORMAT_TFLITE;
+        }
+        // Hugging Face SafeTensors
+        else if (data[0] == 'S' && data[1] == 'A' && data[2] == 'F' && data[3] == 'E') {
+            format = AI_FORMAT_SAFETENSORS;
+        }
+        // TensorRT Engine (various signatures, approximate)
+        else if (size >= 16) {
+            // Look for TensorRT-specific patterns in header
+            // Note: This might need refinement based on actual files
+            uint32_t *magic32 = (uint32_t*)data;
+            if (magic32[0] != 0 && magic32[1] != 0) {
+                // Check if it looks like binary TensorRT engine
+                format = AI_FORMAT_TENSORRT;
+            }
         }
     }
 

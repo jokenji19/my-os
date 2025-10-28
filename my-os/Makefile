@@ -25,3 +25,20 @@ KERNEL_BIN = build/kernel.bin
 KERNEL_MINIMAL_BIN = build/kernel_minimal.bin
 ISO_DIR = build/isodir
 ISO_FILE = build/my-os.iso
+
+# Default target
+.PHONY: all clean
+all: $(ISO_FILE)
+
+# Clean build files
+clean:
+	rm -rf build
+
+# Create build directory
+build:
+	mkdir -p build
+
+# ISO creation
+$(GRUB_CFG_FILE): grub/grub.cfg
+	mkdir -p build/isodir/boot/grub
+	cp grub/grub.cfg build/isodir/boot/grub/

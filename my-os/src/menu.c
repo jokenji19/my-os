@@ -286,7 +286,7 @@ void load_selected_ai_file() {
 
     /* Detect format from content */
     uint8_t detected_format = detect_ai_format(selected_file);
-    const char *format_names[] = {"Sconosciuto", "ONNX", "TensorFlow Lite", "Custom"};
+    const char *format_names[] = {"Sconosciuto", "ONNX", "TensorFlow Lite", "Custom", "Core ML", "TensorRT", "SafeTensors", "GGUF"};
 
     char fmt_msg[40] = "Formato rilevato: ";
     strcat(fmt_msg, format_names[detected_format]);
