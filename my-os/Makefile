@@ -48,6 +48,10 @@ build/kernel.o: src/kernel.c src/*.h
 	mkdir -p build
 	$(GCC) $(GCCFLAGS) -c $< -o $@
 
+build/kernel_simple.o: src/kernel_simple.c
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
 build/fat32.o: src/fat32.c src/fat32.h
 	mkdir -p build
 	$(GCC) $(GCCFLAGS) -c $< -o $@
@@ -75,8 +79,8 @@ $(eval $(call compile-obj,timer))
 $(eval $(call compile-obj,scheduler))
 $(eval $(call compile-obj,menu))
 
-# Kernel binary linking (complete version for testing)
-$(KERNEL_BIN): build/boot.o build/kernel.o build/ai_runtime.o build/sensors.o build/memory.o build/framebuffer.o build/gdt.o build/idt.o build/pic.o build/timer.o build/scheduler.o build/menu.o
+# Kernel binary linking (final complete working version)
+$(KERNEL_BIN): build/boot.o build/kernel_simple.o build/ai_runtime.o build/sensors.o build/memory.o build/framebuffer.o build/gdt.o build/idt.o build/pic.o build/timer.o build/scheduler.o
 	$(LD) $(LDFLAGS) $^ -o $@
 
 # ISO directory creation

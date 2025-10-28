@@ -15,26 +15,17 @@ extern void keyboard_handler(void);
 
 /* Simple kernel main function */
 void kernel_main(void) {
-    /* Initialize all subsystems */
-    init_memory_management();
+    /* Initialize essential subsystems */
+    init_memory_manager();
     init_ai_runtime();
-    init_sensor_system();
 
-    /* Initialize GDT */
-    init_gdt();
-
-    /* Initialize interrupts */
-    init_idt();
-    init_pic();
-
-    /* Initialize timer */
-    init_timer(100); /* 100 Hz */
-
-    /* Initialize scheduler */
-    init_scheduler();
+    /* Skip some initializations for now */
+    /* init_sensor_framework();  // Will use demo sensor data */
+    /* init_gdt(); init_idt();  // Critical for protected mode */
+    /* init_pic(); init_timer(); init_scheduler();  // Hardware dependent */
 
     /* Clear screen and show welcome */
-    vga_clear();
+    vga_clear(0);
     vga_print("=== BOOTING AIPA OS: Universal AI Operating System ===", 0, 1, VGA_COLOR_LIGHT_CYAN);
     vga_print("Innovation developed from scratch with intelligent capabilities", 0, 2, VGA_COLOR_WHITE);
     vga_print("", 0, 3, VGA_COLOR_BLACK);

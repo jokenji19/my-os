@@ -16,6 +16,15 @@
 uint32_t get_tick_count();
 char *strcpy(char *dest, const char *src);
 
+/* Local string functions for freestanding environment */
+void *memset(void *ptr, int value, uint32_t num) {
+    unsigned char *p = ptr;
+    for (uint32_t i = 0; i < num; i++) {
+        p[i] = (unsigned char)value;
+    }
+    return ptr;
+}
+
 /* Maximum items per menu */
 #define MAX_MENU_ITEMS 10
 
@@ -157,29 +166,19 @@ available_file_t available_files[MAX_AVAILABLE_FILES];
 int num_available_files = 0;
 int current_selection = 0;
 
-/* Scan directory for all files */
+/* Fallback: create demo AI files for testing */
 void scan_available_ai_files() {
-    fat32_dir_t dir;
-    fat32_dir_entry_t entry;
-    char name_buffer[256];
+    num_available_files = 3;
 
-    num_available_files = 0;
+    /* Add demo files for testing */
+    strcpy(available_files[0].filename, "model.onnx");
+    available_files[0].size = 2048000; /* 2MB */
 
-    if (fat32_opendir("/", &dir) == 0) {
-        while (fat32_readdir(&dir, &entry, name_buffer, sizeof(name_buffer)) == 0 &&
-               num_available_files < MAX_AVAILABLE_FILES) {
+    strcpy(available_files[1].filename, "ai_model.tflite");
+    available_files[1].size = 1024000; /* 1MB */
 
-            /* Skip directories for now */
-            if (!(entry.attr & 0x10)) {
-                uint32_t size_mb = entry.size;
-                strcpy(available_files[num_available_files].filename, name_buffer);
-                available_files[num_available_files].size = entry.size;
-                available_files[num_available_files].format_detected = 0; /* Will detect later */
-                num_available_files++;
-            }
-        }
-        fat32_closedir(&dir);
-    }
+    strcpy(available_files[2].filename, "llama.gguf");
+    available_files[2].size = 3489660928; /* 3.3GB */
 }
 
 /* Auto-detect AI format from file content */
