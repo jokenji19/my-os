@@ -33,5 +33,14 @@ SECTIONS {
     /* And my uninitialized data (BSS) will be placed here. */
     .bss : {
         *(.bss)
+        *(COMMON)
+    }
+
+    /* Large kernel stack - 2MB to prevent overflow in complex OS */
+    . = ALIGN(4K);
+    .stack : {
+        __stack_bottom = . ;
+        . += 0x200000; /* 2MB stack instead of 64KB */
+        __stack_top = . ;
     }
 }

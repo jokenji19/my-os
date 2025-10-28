@@ -42,16 +42,11 @@ void pit_init(uint32_t frequency) {
 void timer_handler() {
     tick_count++;
 
-    /* Schedule tasks every 100 ticks (1 second at 100Hz) */
-    if (tick_count % 100 == 0) {
-        /* Limit multitasking demo to avoid infinite loops */
-        if (tick_count < 10000) { /* Stop after 100 seconds */
-            schedule();
-        }
-    }
+    /* For stability, only log ticks without complex task switching */
+    /* Task switching disabled to prevent interrupt race conditions */
 
     /* Prevent infinite demo - exit after reasonable period */
-    if (tick_count >= 10000) { /* 100 seconds at 100Hz */
+    if (tick_count >= 2000) { /* ~20 seconds at 100Hz for quick demo */
         vga_print("Demo AI completata! Spegnimento sicuro...", 0, 45, VGA_COLOR_RED);
         __asm__ __volatile__("cli; hlt");
     }

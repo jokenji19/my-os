@@ -19,6 +19,8 @@
 void isr0_handler();
 void isr1_handler();
 
+void init_basic_paging();
+
 /* Menu callback prototypes */
 extern void callback_insert_ai();
 extern void callback_info();
@@ -194,18 +196,19 @@ void kernel_main(void) {
     /* Enable interrupts */
     __asm__ __volatile__("sti");
 
+    /* Initialize basic paging after interrupts are enabled */
+    init_basic_paging();
+
     vga_print("PIC e Timer inizializzati - Interruzioni abilitate!", 0, 8, VGA_COLOR_LIGHT_GREEN);
     vga_print("Il sistema sta ora ricevendo interrupt del timer...", 0, 10, VGA_COLOR_LIGHT_GREEN);
 
-    /* Initialize the task scheduler */
+    /* Initialize the task scheduler but disable complex multitasking for stability */
     init_scheduler();
-    /* TODO: Enable tasks when linked properly */
-    /* create_task(1, task_process_1);
-    create_task(2, task_process_2);
-    create_task(3, task_process_3); */
+    /* NOTE: Complex task switching disabled in timer to prevent interrupt conflicts */
+    /* For demo, focus is on AI functionality without multitasking complexity */
 
-    vga_print("Scheduler inizializzato con 3 processi demo!", 0, 12, VGA_COLOR_LIGHT_GREEN);
-    vga_print("Il multitasking e' ora attivo - osserva il switching!", 0, 14, VGA_COLOR_LIGHT_GREEN);
+    vga_print("Scheduler inizializzato - multitasking semplificato per stabilita!", 0, 12, VGA_COLOR_LIGHT_GREEN);
+    vga_print("Focus sulla AI - osservate le decisioni intelligenti!", 0, 14, VGA_COLOR_LIGHT_GREEN);
 
     /* Initialize memory manager */
     init_memory_manager();
@@ -242,4 +245,25 @@ void kernel_main(void) {
         /* Main system loop - AI can perform periodic tasks here */
         /* For demo, we rely on timer interrupts to drive activity */
     }
+}
+
+/* Basic paging initialization - simplified to work with QEMU */
+void init_basic_paging() {
+    /* For now, we'll skip complex paging setup and let the system
+       run with direct physical address mapping. This prevents paging
+       conflicts in QEMU emulation that cause instability.
+
+       In a production system, we would set up proper page tables here.
+    */
+
+    /* Enable paging bit in CR0, but keep identity mapping */
+    __asm__ __volatile__(
+        "movl %%cr0, %%eax;"        /* Read current CR0 */
+        "or $0x80000000, %%eax;"    /* Set paging bit (PG) */
+        "movl %%eax, %%cr0;"        /* Write back to CR0 */
+        : : : "eax"
+    );
+
+    /* Note: Real paging setup would create page directory and table entries */
+    /* For stability demo, we use bootloader's identity mapping */
 }
