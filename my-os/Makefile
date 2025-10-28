@@ -38,7 +38,57 @@ clean:
 build:
 	mkdir -p build
 
-# ISO creation
-$(GRUB_CFG_FILE): grub/grub.cfg
-	mkdir -p build/isodir/boot/grub
-	cp grub/grub.cfg build/isodir/boot/grub/
+# Assembly compilation
+build/boot.o: src/boot.s
+	mkdir -p build
+	$(ASM) -o $@ $<
+
+# Object compilation
+build/kernel.o: src/kernel.c src/*.h
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+build/fat32.o: src/fat32.c src/fat32.h
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+build/ai_loader.o: src/ai_loader.c src/ai_loader.h
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $< -o $@
+
+# Additional object files compilation (auto-generated for source files)
+define compile-obj
+build/$1.o: src/$1.c src/$1.h
+	mkdir -p build
+	$(GCC) $(GCCFLAGS) -c $$< -o $$@
+endef
+
+$(eval $(call compile-obj,kernel))
+$(eval $(call compile-obj,ai_runtime))
+$(eval $(call compile-obj,sensors))
+$(eval $(call compile-obj,memory))
+$(eval $(call compile-obj,framebuffer))
+$(eval $(call compile-obj,gdt))
+$(eval $(call compile-obj,idt))
+$(eval $(call compile-obj,pic))
+$(eval $(call compile-obj,timer))
+$(eval $(call compile-obj,scheduler))
+$(eval $(call compile-obj,menu))
+
+# Kernel binary linking
+$(KERNEL_BIN): build/boot.o build/kernel.o build/ai_runtime.o build/sensors.o build/memory.o build/framebuffer.o build/gdt.o build/idt.o build/pic.o build/timer.o build/scheduler.o build/menu.o build/fat32.o build/ai_loader.o
+	$(LD) $(LDFLAGS) $^ -o $@
+
+# ISO directory creation
+$(ISO_DIR)/boot/kernel.bin: $(KERNEL_BIN)
+	mkdir -p $(ISO_DIR)/boot
+	cp $(KERNEL_BIN) $(ISO_DIR)/boot/kernel.bin
+
+# GRUB configuration
+$(ISO_DIR)/boot/grub/grub.cfg: grub/grub.cfg
+	mkdir -p $(ISO_DIR)/boot/grub
+	cp grub/grub.cfg $(ISO_DIR)/boot/grub/
+
+# ISO image creation
+$(ISO_FILE): $(ISO_DIR)/boot/grub/grub.cfg $(ISO_DIR)/boot/kernel.bin
+	$(GRUB_MKRESCUE) -o $(ISO_FILE) $(ISO_DIR)
