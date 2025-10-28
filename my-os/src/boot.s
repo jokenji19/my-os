@@ -21,7 +21,7 @@ start:
     movl $stack_top, %esp
     
     # Now I'll call my C kernel's main function.
-    call kernel_minimal
+    call kernel_main
     
     # If the kernel ever returns, I'll halt the CPU.
     cli

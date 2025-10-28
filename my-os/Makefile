@@ -15,7 +15,11 @@ LDFLAGS = -T src/linker.ld
 
 # I'm defining the output and intermediate files here.
 BOOT_OBJ = build/boot.o
+KERNEL_OBJ = build/kernel.o
 KERNEL_MINIMAL_OBJ = build/kernel_minimal.o
 IDT_OBJ = build/idt.o
 GDT_OBJ = build/gdt.o
-PML = build/kernel_minimal.bin
+KERNEL_BIN = build/kernel.bin
+KERNEL_MINIMAL_BIN = build/kernel_minimal.bin
+ISO_DIR = build/isodir
+ISO_FILE = build/my-os.iso
