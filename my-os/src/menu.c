@@ -12,8 +12,6 @@
 #include "fat32.h"
 #include "ai_loader.h"
 
-#include <string.h>
-
 /* Forward declarations */
 uint32_t get_tick_count();
 char *strcpy(char *dest, const char *src);

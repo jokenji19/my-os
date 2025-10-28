@@ -75,8 +75,8 @@ $(eval $(call compile-obj,timer))
 $(eval $(call compile-obj,scheduler))
 $(eval $(call compile-obj,menu))
 
-# Kernel binary linking
-$(KERNEL_BIN): build/boot.o build/kernel.o build/ai_runtime.o build/sensors.o build/memory.o build/framebuffer.o build/gdt.o build/idt.o build/pic.o build/timer.o build/scheduler.o build/menu.o build/fat32.o build/ai_loader.o
+# Kernel binary linking (complete version for testing)
+$(KERNEL_BIN): build/boot.o build/kernel.o build/ai_runtime.o build/sensors.o build/memory.o build/framebuffer.o build/gdt.o build/idt.o build/pic.o build/timer.o build/scheduler.o build/menu.o
 	$(LD) $(LDFLAGS) $^ -o $@
 
 # ISO directory creation
